@@ -18,6 +18,7 @@ NEWS = ""
 install_requires = [
     'mechanize',
     'lxml',
+    'matplotlib',
 ]
 
 setup(name=NAME,
@@ -33,6 +34,7 @@ setup(name=NAME,
       include_package_data=True,
       zip_safe=True,
       install_requires=install_requires,
+      extra_requires={'graphs': 'matplotlib'},
       description="{}".format(NAME),
       long_description=README + '\n\n' + NEWS,
       keywords='{}'.format(NAME),
