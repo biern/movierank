@@ -9,26 +9,26 @@ from setuptools import setup, find_packages
 import os
 
 here = os.path.abspath(os.path.dirname(__file__))
-NAME = "movierate"
+NAME = "movierank"
 VERSION = open(os.path.join(here, 'VERSION')).read()
 README = open(os.path.join(here, 'README.rst')).read()
 NEWS = ""
 
 
 install_requires = [
-
+    'lxml'
 ]
 
 setup(name=NAME,
       version=VERSION,
       entry_points={
         'console_scripts': [
-            'movierate = movierate.movierate:main'
+            'movierank = movierank.movierank:main'
             ]
         },
       packages=find_packages('src'),
       package_dir={'': 'src'},
-      package_data={'movierate': ['template.html']},
+      package_data={'movierank': ['template.html']},
       include_package_data=True,
       zip_safe=True,
       install_requires=install_requires,
