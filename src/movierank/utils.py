@@ -26,8 +26,8 @@ def get_title_hints(path):
     exts = '(avi|mpg|mpeg|mkv|mp4|wmv)$'
 
     dir, title = os.path.split(path)
-    title, ext = os.path.splitext(title)
     if not os.path.isdir(path):
+        title, ext = os.path.splitext(title)
         if not re.search(exts, path):
             return None
 
@@ -37,18 +37,18 @@ def get_title_hints(path):
     if m:
         year = m.group('year')
         pos = m.start('year')
-        if pos >= 0:
+        if pos > 0:
             title = title[:pos]
 
     for seq in ('(', '[', '{', 'dvd', 'limited',
                  'brip', '720', 'hd', 'x264', 'unrated'):
         pos = title.lower().find(seq)
-        if pos >= 0:
+        if pos > 0:
             title = title[:pos]
 
-    # title = re.sub(r'\(.*?\)', '', title)
-    # title = re.sub(r'\[.*?\]', '', title)
-    # title = re.sub(r'\{.*?\}', '', title)
+    title = title.strip()
+    if not title:
+        return None
 
     return {'title_raw': title, 'year': year, 'path': path}
 
