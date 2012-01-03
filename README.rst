@@ -23,10 +23,14 @@ Scan current directory, generate 'movierank.html' report file and run it in brow
 
         movierank -r
 
-Scan given directories write output to 'some_file.html', generate histogram ::
+Scan given directories write output to 'some_file.html' ::
 
-        movierank some_dir/a some_other_dir . -o some_file.html -hi
+        movierank some_dir/a some_other_dir . -o some_file.html
 
 Force reloading every title, do not use cached data ::
 
          movierank -f
+
+Generate histogram in report and show it (requires 'matplotlib' and 'numpy') ::
+
+         movierank -r -hi
