@@ -16,7 +16,8 @@ NEWS = ""
 
 
 install_requires = [
-    'lxml'
+    'mechanize',
+    'lxml',
 ]
 
 setup(name=NAME,
