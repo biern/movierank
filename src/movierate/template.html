@@ -1,0 +1,45 @@
+<html>
+  <head>
+    <title>Movie Ranking</title>
+    <meta charset="utf-8">
+    <script src="http://www.kryogenix.org/code/browser/sorttable/sorttable.js"></script>
+    <link href='http://fonts.googleapis.com/css?family=Crete+Round&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+    <style type="text/css">
+      body {text-align: center;
+        font-family: 'Crete Round', serif;
+        font-size: 22pt;
+      }
+      table {
+        font-size: 16pt;
+        margin-left:auto;
+        margin-right:auto;
+        padding: 3px 10px 3px 10px;
+        border: 2px solid #eee;
+        border-radius: 10px;
+      }
+      /* Sortable tables */
+      table.sortable thead {
+        background-color:#eee;
+        color:#666666;
+        font-weight: bold;
+        cursor: default;
+      }
+
+      .sub {
+        font-family: sans;
+        font-size: 12pt;
+        font-color: #666666;
+      }
+
+    </style>
+  </head>
+  <p>Rozpoznane tytuły:
+  <table class="sortable">
+    {{headers}}
+    {{movies}}
+  </table>
+  <p>Nierozpoznane tytuły:
+  <table>
+    {{not_found}}
+  </table>
+</html>
