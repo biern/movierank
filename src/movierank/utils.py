@@ -39,6 +39,8 @@ def get_title_hints(path):
         pos = m.start('year')
         if pos > 0:
             title = title[:pos]
+        if pos == 0:
+            title = title.replace(year, "")
 
     for seq in ('(', '[', '{', 'dvd', 'limited',
                  'brip', '720', 'hd', 'x264', 'unrated'):
