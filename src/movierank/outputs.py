@@ -28,7 +28,6 @@ class HTMLOutput(Output):
         self._format_data = defaultdict(str)
         self.file = file
         self._movies_n = 0
-        self._not_found_n = 0
 
     def write_headers(self, dbs):
         headers = ["Tytuł"]
@@ -72,8 +71,6 @@ class HTMLOutput(Output):
         return text
 
     def write_not_found(self, not_found):
-        self._not_found_n += 1
-        self._format_data['not_found_num'] = str(self._not_found_n)
         for movie in not_found.values():
             # dirty
             self._format_data['not_found'] += "<tr>" + \
@@ -82,6 +79,8 @@ class HTMLOutput(Output):
                      'sub': movie['path'] } )) + \
                 "<td></td>" * self._headers_n + \
                 "</tr>"
+
+        self._format_data['not_found_num'] = str(len(not_found.values()))
 
     def flush(self):
         def repl(match):
