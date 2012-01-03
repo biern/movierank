@@ -19,6 +19,7 @@ install_requires = [
     'mechanize',
     'lxml',
     'matplotlib',
+    'numpy',
 ]
 
 setup(name=NAME,
