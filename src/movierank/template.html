@@ -33,12 +33,13 @@
 
     </style>
   </head>
-  <p>Rozpoznane tytuły:
+  <p>Rozpoznane tytuły: {{ movies_num }}
   <table class="sortable">
     {{headers}}
     {{movies}}
   </table>
-  <p>Nierozpoznane tytuły:
+  {{extra}}
+  <p>Nierozpoznane tytuły: {{ not_found_num }}
   <table>
     {{not_found}}
   </table>

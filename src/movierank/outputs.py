@@ -18,12 +18,17 @@ class Output(object):
     def flush(self):
         pass
 
+    def add_extra(self, key, data):
+        pass
+
 
 class HTMLOutput(Output):
     def __init__(self, file, template):
         self._template = template
         self._format_data = defaultdict(str)
         self.file = file
+        self._movies_n = 0
+        self._not_found_n = 0
 
     def write_headers(self, dbs):
         headers = ["Tytuł"]
@@ -35,6 +40,8 @@ class HTMLOutput(Output):
                                                  for h in headers)
 
     def write_movie(self, key, dbs):
+        self._movies_n += 1
+        self._format_data['movies_num'] = str(self._movies_n)
         values = []
         values.append(self._value_to_tag(
                 dbs[0].movie_basic_info(key)))
@@ -65,6 +72,8 @@ class HTMLOutput(Output):
         return text
 
     def write_not_found(self, not_found):
+        self._not_found_n += 1
+        self._format_data['not_found_num'] = str(self._not_found_n)
         for movie in not_found.values():
             # dirty
             self._format_data['not_found'] += "<tr>" + \
@@ -81,3 +90,10 @@ class HTMLOutput(Output):
         text = re.sub(r"\{\{\s*(.*?)\s*\}\}", repl, self._template)
         self.file.write(text)
         self.file.flush()
+
+    def add_extra(self, key, data):
+        if key == 'histogram':
+            self._format_data['extra'] += \
+"""
+<p>Histogram ocen:<br/>
+<img src="{data}"/>""".format(data=data)
