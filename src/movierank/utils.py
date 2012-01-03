@@ -3,7 +3,6 @@
 import argparse
 import logging
 import os
-import time
 import re
 
 # 1. List dirs
@@ -34,14 +33,16 @@ def get_title_hints(path):
 
     year = None
 
-    re_year = r"(?P<year>\d{4}|\(\d{4}\)|\[\d{4}\])"
-    m = re.search(re_year, title)
+    m = re.search(r"(?P<year>\d{4})", title)
     if m:
         year = m.group('year')
-        title = title[:m.start('year')]
+        pos = m.start('year')
+        if pos >= 0:
+            title = title[:pos]
 
-    for char in ('(', '[', '{'):
-        pos = title.find(char)
+    for seq in ('(', '[', '{', 'dvd', 'limited',
+                 'brip', '720', 'hd', 'x264', 'unrated'):
+        pos = title.lower().find(seq)
         if pos >= 0:
             title = title[:pos]
 
@@ -80,11 +81,18 @@ def find_movies_info(directories, dbs, output=None, sort_key='title'):
 
     log.info("Getting movies information")
     for th in titles_hints:
+        tr = th['title_raw']
         found = False
         for i, db in enumerate(dbs):
-            # be nice
-            time.sleep(1)
-            movie = db.find_movie(th['title_raw'], th)
+            # Get info from db cache if possible. If not search for it
+            try:
+                movie = db.movies[tr]
+            except KeyError:
+                if tr in db.not_found:
+                    movie = None
+                else:
+                    movie = db.find_movie(tr, th)
+
             if not movie:
                 continue
 
@@ -116,7 +124,7 @@ def find_movies_info(directories, dbs, output=None, sort_key='title'):
     output.order = titles_sorted
     output.write(dbs)
     output.write_not_found(not_found)
-    output.flush()
+    return db_main.movies
 
 
 def create_parser():
@@ -128,4 +136,20 @@ def create_parser():
                         default="movierate.html")
     parser.add_argument("-r", "--run", help="open file in default viewer",
                         action="store_true")
+    parser.add_argument("-f", "--force", help="do not use cached data",
+                        action="store_true")
+    parser.add_argument("-hi", "--histogram",
+                        help="generate histogram (requires matplotlib)",
+                        action="store_true")
+
     return parser
+
+
+def histogram(movies, out):
+    from matplotlib import pyplot as plt
+    plt.figure()
+    x = [float(m['rating']) for m in movies.values()]
+    plt.hist(x, range(1, 11), range=(0, 11),
+             aa=True, color="#3A6DAA", rwidth=0.8)
+    plt.savefig(out)
+    return plt

@@ -5,11 +5,13 @@ from lxml.cssselect import CSSSelector
 from lxml import etree
 import mechanize
 import urllib
+import time
 
 
 class MovieDatabase(object):
     def __init__(self):
         self.movies = {}
+        self.not_found = []
 
     def movie_basic_info(self, key):
         movie = self.movies[key]
@@ -35,21 +37,36 @@ class FilmwebDatabase(MovieDatabase):
     log = logging.getLogger("FilmWebDB")
 
     def __init__(self):
+        self._init_browser()
+        self.movies = {}
+        self.not_found = []
+
+    def _init_browser(self):
         self.br = mechanize.Browser()
         # Skips ad later
         self.br.open("http://www.filmweb.pl")
-        self.movies = {}
+
+    def __getstate__(self):
+        state = self.__dict__.copy()
+        del state['br']
+        return state
+
+    def __setstate__(self, state):
+        self.__dict__ = state
+        self._init_browser()
 
     def find_movie(self, title, title_hints={}):
         self.log.info('Searching for "{}"'.format(title))
         url = "http://www.filmweb.pl/search/film?q={}".format(
             urllib.quote(title))
         response = self.br.open(url)
+        time.sleep(1)
         text = response.read()
         html = etree.HTML(text)
         nodes = CSSSelector(".searchResultTitle")(html)
         if len(nodes) == 0:
             self.log.info('Not found'.format(title))
+            self.not_found.append(title)
             return None
 
         result = {}
