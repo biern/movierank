@@ -1,12 +1,12 @@
 About
 =====
 
-        Python script that recognizes movie titles in given directories, finds them in online web services and generates HTML report with sorted titles, their ranking and links.
+Python script that recognizes movie titles in given directories, finds them in online web services and generates HTML report with sorted titles, their ranking and links.
 
 Installation
 ============
 
- - Requires Python2.7 or higher.
+- Requires Python2.7 or higher.
 
 ::
 
