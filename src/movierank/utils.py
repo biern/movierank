@@ -86,23 +86,11 @@ def find_movies_info(directories, dbs, output=None, sort_key='title'):
         tr = th['title_raw']
         found = False
         for i, db in enumerate(dbs):
-            # Get info from db cache if possible. If not search for it
-            try:
-                movie = db.movies[tr]
-            except KeyError:
-                if tr in db.not_found:
-                    movie = None
-                else:
-                    movie = db.find_movie(tr, th)
-
+            movie = db.find_movie(tr, th)
             if not movie:
                 continue
 
             found = True
-            if db == db_main:
-                # Storing all information in db_main
-                th.update(movie)
-                movie.update(th)
 
         if not found:
             th['title'] = th['title_raw']
@@ -126,7 +114,7 @@ def find_movies_info(directories, dbs, output=None, sort_key='title'):
     output.order = titles_sorted
     output.write(dbs)
     output.write_not_found(not_found)
-    return db_main.movies
+    return [db_main.movies[th['title_raw']] for th in titles_found]
 
 
 def create_parser():
@@ -150,7 +138,7 @@ def create_parser():
 def histogram(movies, out):
     from matplotlib import pyplot as plt
     plt.figure()
-    x = [float(m['rating']) for m in movies.values()]
+    x = [float(m['rating']) for m in movies]
     plt.hist(x, range(1, 11), range=(0, 11),
              aa=True, color="#3A6DAA", rwidth=0.8)
     plt.savefig(out)

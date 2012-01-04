@@ -32,7 +32,7 @@ class HTMLOutput(Output):
     def write_headers(self, dbs):
         headers = ["Tytuł"]
         for db in dbs:
-            headers += db.headers_info()
+            headers += db.headers()
 
         self._headers_n = len(headers)
         self._format_data['headers'] = "\n".join("<th>{}</th>".format(h)
@@ -45,7 +45,7 @@ class HTMLOutput(Output):
         values.append(self._value_to_tag(
                 dbs[0].movie_basic_info(key)))
         for db in dbs:
-            mi = db.movie_info(key)
+            mi = db.movie_values(key)
             for i, v in enumerate(mi):
                 if not isinstance(v, str):
                     mi[i] = self._value_to_tag(v)
